@@ -1,0 +1,344 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>CT Crypto Proof Viewer</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --panel: #121826;
+    --text: #e6edf3;
+    --muted: #9aa4b2;
+    --accent: #7aa2f7;
+    --accent2: #9ece6a;
+    --accent3: #f7768e;
+    --edge: rgba(230, 237, 243, 0.35);
+    --node: #1f2a3b;
+    --node-stroke: rgba(230, 237, 243, 0.35);
+    --security: rgba(158, 206, 106, 0.6);
+    --modality: rgba(122, 162, 247, 0.6);
+    --task: rgba(247, 118, 142, 0.6);
+  }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(230, 237, 243, 0.08);
+    background: linear-gradient(180deg, rgba(18, 24, 38, 0.9), rgba(18, 24, 38, 0.5));
+  }
+  header .title {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  header .hint {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    height: calc(100vh - 62px);
+  }
+  .left {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(1200px 700px at 20% 10%, rgba(122, 162, 247, 0.12), transparent 50%),
+                radial-gradient(1200px 700px at 80% 30%, rgba(158, 206, 106, 0.08), transparent 55%);
+  }
+  .toolbar {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    background: rgba(18, 24, 38, 0.75);
+    border: 1px solid rgba(230, 237, 243, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .toolbar label {
+    font-size: 12px;
+    color: var(--muted);
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .toolbar button, .toolbar select {
+    border: 1px solid rgba(230, 237, 243, 0.12);
+    background: rgba(31, 42, 59, 0.75);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .toolbar button:hover, .toolbar select:hover { border-color: rgba(122, 162, 247, 0.55); }
+  .toolbar .status { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .right {
+    border-left: 1px solid rgba(230, 237, 243, 0.08);
+    background: var(--panel);
+    padding: 12px;
+    overflow: auto;
+  }
+  .card {
+    border: 1px solid rgba(230, 237, 243, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    background: rgba(11, 14, 20, 0.35);
+    margin-bottom: 12px;
+  }
+  .card h2 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  pre {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: rgba(230, 237, 243, 0.9);
+  }
+  .kv { color: var(--muted); }
+  .highlight { color: var(--accent); }
+  .highlight2 { color: var(--accent2); }
+  .highlight3 { color: var(--accent3); }
+  svg { width: 100%; height: 100%; }
+  .edge { stroke: var(--edge); stroke-width: 1.5; fill: none; }
+  .node { fill: var(--node); stroke: var(--node-stroke); stroke-width: 1.5; cursor: pointer; }
+  .node:hover { stroke: var(--accent); stroke-width: 2; }
+  .node.modality { fill: rgba(122, 162, 247, 0.25); stroke: var(--accent); }
+  .node.task { fill: rgba(247, 118, 142, 0.25); stroke: var(--accent3); }
+  .node.security { fill: rgba(158, 206, 106, 0.25); stroke: var(--accent2); }
+  .nodeText { fill: rgba(230, 237, 243, 0.92); font-size: 11px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; pointer-events: none; }
+  .legend { position: absolute; bottom: 12px; left: 12px; background: rgba(18, 24, 38, 0.85); padding: 8px 12px; border-radius: 8px; font-size: 11px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+
+<header>
+  <div class="title">CT Crypto Proof Structure Viewer</div>
+  <div class="hint">
+    Constructor-Theoretic Cryptography: Proof dependencies and security architecture.
+    Click nodes to inspect theorems.
+  </div>
+</header>
+
+<div class="layout">
+  <div class="left">
+    <div class="toolbar">
+      <select id="viewSelect">
+        <option value="full">Full Proof Graph</option>
+        <option value="security">Security Flow</option>
+        <option value="modality">Physical Modality</option>
+        <option value="task">Task Algebra</option>
+      </select>
+      <label><input id="showLabels" type="checkbox" checked /> labels</label>
+      <button id="fit">fit</button>
+      <button id="download">download SVG</button>
+      <span class="status" id="status">9 theorems</span>
+    </div>
+
+    <svg id="svg" viewBox="0 0 900 500" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(230,237,243,0.42)"></path>
+        </marker>
+      </defs>
+      <g id="viewport">
+        <!-- Edges -->
+        <g id="edges">
+          <path class="edge" d="M 200 100 L 350 180" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 350 200 L 500 280" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 200 300 L 350 220" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 350 200 L 500 120" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 500 300 L 650 380" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 500 120 L 650 200" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 650 200 L 750 280" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 650 380 L 750 320" marker-end="url(#arrow)"/>
+          <path class="edge" d="M 200 400 L 350 320" marker-end="url(#arrow)"/>
+        </g>
+        <!-- Nodes -->
+        <g id="nodes">
+          <!-- Modality layer -->
+          <g class="node-group" data-id="PhysicalModality">
+            <circle class="node modality" cx="200" cy="100" r="35"/>
+            <text class="nodeText" x="200" y="104" text-anchor="middle">PhysicalModality</text>
+          </g>
+          <g class="node-group" data-id="contextuality_implies_physImpossible">
+            <circle class="node modality" cx="350" cy="200" r="40"/>
+            <text class="nodeText" x="350" y="196" text-anchor="middle">contextuality_implies</text>
+            <text class="nodeText" x="350" y="210" text-anchor="middle">_physImpossible</text>
+          </g>
+          <g class="node-group" data-id="triangle_no_global">
+            <circle class="node modality" cx="200" cy="300" r="35"/>
+            <text class="nodeText" x="200" y="304" text-anchor="middle">triangle_no_global</text>
+          </g>
+
+          <!-- Task layer -->
+          <g class="node-group" data-id="TaskCT">
+            <circle class="node task" cx="500" cy="120" r="30"/>
+            <text class="nodeText" x="500" y="124" text-anchor="middle">TaskCT</text>
+          </g>
+          <g class="node-group" data-id="SuperinformationMedium">
+            <circle class="node task" cx="500" cy="300" r="40"/>
+            <text class="nodeText" x="500" y="296" text-anchor="middle">Superinfo</text>
+            <text class="nodeText" x="500" y="310" text-anchor="middle">Medium</text>
+          </g>
+          <g class="node-group" data-id="qubitLikeSuperinfo">
+            <circle class="node task" cx="200" cy="400" r="35"/>
+            <text class="nodeText" x="200" y="404" text-anchor="middle">qubitLikeSuperinfo</text>
+          </g>
+
+          <!-- Security layer -->
+          <g class="node-group" data-id="InfoVariable">
+            <circle class="node security" cx="650" cy="200" r="30"/>
+            <text class="nodeText" x="650" y="204" text-anchor="middle">InfoVariable</text>
+          </g>
+          <g class="node-group" data-id="superinfo_secure">
+            <circle class="node security" cx="650" cy="380" r="40"/>
+            <text class="nodeText" x="650" y="376" text-anchor="middle">superinfo_secure</text>
+            <text class="nodeText" x="650" y="390" text-anchor="middle">_against_eavesdrop</text>
+          </g>
+          <g class="node-group" data-id="composed_security">
+            <circle class="node security" cx="750" cy="300" r="35"/>
+            <text class="nodeText" x="750" y="304" text-anchor="middle">composed_security</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background: var(--modality);"></div> Physical Modality</div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--task);"></div> Task Algebra</div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--security);"></div> Security</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h2>Selection</h2>
+      <pre id="details">Click a node to inspect its definition and proof.</pre>
+    </div>
+
+    <div class="card">
+      <h2>CT Crypto Architecture</h2>
+      <pre class="kv">
+<span class="highlight">Layer 1: Physical Modality</span>
+  PhysicalModality : Phi P -> P
+  (sound, not inflationary)
+
+<span class="highlight2">Layer 2: Contextuality Bridge</span>
+  NoGlobalSection -> not Phi(HasGlobalSection)
+  Kochen-Specker obstruction
+
+<span class="highlight3">Layer 3: Task Algebra</span>
+  TaskCT.possible T := exists c, implements c T
+  Superinformation: X,Y clonable, XY not
+
+<span class="highlight2">Layer 4: Security</span>
+  Eavesdropping requires cloning
+  -> CT-impossible by no_copyXY
+      </pre>
+    </div>
+
+    <div class="card">
+      <h2>Key Theorems</h2>
+      <pre class="kv">
+<span class="highlight">superinfo_secure_against_eavesdropping</span>
+  Main security result
+
+<span class="highlight2">composed_security</span>
+  Compositional transfer (axiom-free!)
+
+<span class="highlight3">qubitLikeSuperinfo</span>
+  Concrete superinfo witness
+
+<span class="highlight">triangle_no_global</span>
+  KS contextuality example
+      </pre>
+    </div>
+  </div>
+</div>
+
+<script>
+const THEOREM_INFO = {
+  "PhysicalModality": {
+    file: "HeytingLean/Crypto/ConstructiveHardness/PhysicalModality.lean",
+    type: "structure",
+    desc: "Sound physical possibility modality on Prop.\n\nstructure PhysicalModality where\n  toFun : Prop -> Prop\n  mono : (P -> Q) -> (toFun P -> toFun Q)\n  sound : toFun P -> P\n\nKey insight: CT uses Phi P -> P (soundness),\nnot P -> Phi P (inflation like Mathlib nuclei)."
+  },
+  "contextuality_implies_physImpossible": {
+    file: "HeytingLean/Crypto/ConstructiveHardness/ContextualityPhysical.lean",
+    type: "theorem",
+    desc: "Kochen-Specker contextuality implies physical impossibility.\n\ntheorem contextuality_implies_physImpossible\n    (Phi : PhysicalModality)\n    (X : Context) (cover : Finset Context)\n    (e : EmpiricalModel cover)\n    (coverSubX : ...) :\n    NoGlobalSection X cover e coverSubX ->\n      not Phi.toFun (GlobalSectionTask ...)\n\nCore constructive step: not P and Phi.sound implies not Phi P."
+  },
+  "triangle_no_global": {
+    file: "HeytingLean/LoF/CryptoSheaf/Quantum/EmpiricalModel.lean",
+    type: "theorem",
+    desc: "The triangle parity model has no global section.\n\ntheorem triangle_no_global :\n    NoGlobalSection X_abc triangleCover\n                   triangleModel (...)\n\nConstraints: a=b, b=c, a!=c are inconsistent.\nThis is the classic Kochen-Specker obstruction."
+  },
+  "TaskCT": {
+    file: "HeytingLean/Constructor/CT/TaskExistence.lean",
+    type: "structure",
+    desc: "Constructor existence interface for CT tasks.\n\nstructure TaskCT (sigma : Type) where\n  Ctor : Type\n  implements : Ctor -> Task sigma -> Prop\n  seqCtor : Ctor -> Ctor -> Ctor\n  parCtor : Ctor -> Ctor -> Ctor\n  implements_seq : ...\n  implements_par : ...\n\npossible T := exists c, implements c T"
+  },
+  "SuperinformationMedium": {
+    file: "HeytingLean/Constructor/CT/InformationSound.lean",
+    type: "structure",
+    desc: "Superinformation medium interface.\n\nstructure SuperinformationMedium where\n  X : InfoVariable sigma CT  -- clonable\n  Y : InfoVariable sigma CT  -- clonable\n  XY : Variable sigma         -- union\n  copyXY : Task sigma          -- copy union\n  no_copyXY : CT.impossible copyXY\n\nKey axiom: X and Y individually clonable,\nbut their union XY cannot be cloned."
+  },
+  "qubitLikeSuperinfo": {
+    file: "HeytingLean/Constructor/CT/Examples/QubitLike.lean",
+    type: "def",
+    desc: "Concrete superinformation witness over Bool x Bool.\n\ndef qubitLikeSuperinfo : SuperinformationMedium ...\n\ncompBasis = {(ff,ff), (tt,tt)}  -- computational\ndiagBasis = {(ff,tt), (tt,ff)}  -- diagonal\n\nEach basis is clonable, but copying\ncompBasis UNION diagBasis is impossible\n(via AllowedArc constraint)."
+  },
+  "InfoVariable": {
+    file: "HeytingLean/Constructor/CT/InformationSound.lean",
+    type: "structure",
+    desc: "CT information variable with permutation and copy tasks.\n\nstructure InfoVariable where\n  toVariable : Variable sigma\n  Perm : Type\n  permTask : Perm -> Task sigma\n  perm_possible : forall p, CT.possible (permTask p)\n  copyTask : Task sigma\n  copy_possible : CT.possible copyTask\n\nAn information variable supports:\n- Permutations (all possible)\n- Copying (possible)"
+  },
+  "superinfo_secure": {
+    file: "HeytingLean/Crypto/ConstructiveHardness/Security.lean",
+    type: "theorem",
+    desc: "Main security theorem.\n\ntheorem superinfo_secure_against_eavesdropping\n    (CT : TaskCT sigma)\n    (M : SuperinformationMedium sigma CT) :\n    SecureAgainstEavesdropping sigma CT M\n\nProof: If eavesdropping requires cloning M.copyXY,\nand M.no_copyXY says that's impossible,\nthen the eavesdropping task is impossible."
+  },
+  "composed_security": {
+    file: "HeytingLean/Crypto/ConstructiveHardness/Composition.lean",
+    type: "theorem",
+    desc: "Compositional security transfer.\n\ntheorem composed_security\n    (h_requires : CT.possible T_attack ->\n                  CT.possible T_sub)\n    (h_sub_impossible : CT.impossible T_sub) :\n    CT.impossible T_attack\n\nIf attacking requires an impossible subtask,\nthe attack itself is impossible.\n\nNOTE: This is AXIOM-FREE (constructive)!"
+  }
+};
+
+document.querySelectorAll('.node-group').forEach(g => {
+  g.addEventListener('click', () => {
+    const id = g.dataset.id;
+    const info = THEOREM_INFO[id];
+    if (info) {
+      document.getElementById('details').innerHTML =
+        `<span class="highlight">${id}</span>\n` +
+        `<span class="kv">File:</span> ${info.file}\n` +
+        `<span class="kv">Type:</span> ${info.type}\n\n` +
+        info.desc;
+    }
+  });
+});
+
+document.getElementById('download').addEventListener('click', () => {
+  const svg = document.getElementById('svg');
+  const blob = new Blob([svg.outerHTML], {type: 'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ct_crypto_proof_graph.svg';
+  a.click();
+});
+</script>

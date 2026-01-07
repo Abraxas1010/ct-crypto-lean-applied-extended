@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0e14"/>
+      <stop offset="100%" style="stop-color:#121826"/>
+    </linearGradient>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="rgba(158, 206, 106, 0.7)"/>
+    </marker>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="rgba(247, 118, 142, 0.7)"/>
+    </marker>
+  </defs>
+
+  <rect width="600" height="300" fill="url(#bg3)"/>
+
+  <text x="300" y="30" fill="#e6edf3" font-family="system-ui" font-size="16" font-weight="600" text-anchor="middle">
+    Security Reduction Flow
+  </text>
+
+  <!-- Step 1: Eavesdropping requires cloning -->
+  <rect x="30" y="70" width="140" height="80" rx="8" fill="rgba(247, 118, 142, 0.15)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="100" y="95" fill="#f7768e" font-family="monospace" font-size="10" text-anchor="middle">Eavesdropping</text>
+  <text x="100" y="110" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">E.intercept</text>
+  <text x="100" y="130" fill="#9aa4b2" font-family="monospace" font-size="8" text-anchor="middle">intercept task</text>
+
+  <path d="M175 110 L225 110" stroke="#f7768e" stroke-width="2" marker-end="url(#arr3)"/>
+  <text x="200" y="100" fill="#9aa4b2" font-family="system-ui" font-size="8" text-anchor="middle">requires</text>
+
+  <!-- Step 2: Cloning the superinfo medium -->
+  <rect x="230" y="70" width="140" height="80" rx="8" fill="rgba(247, 118, 142, 0.15)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="300" y="95" fill="#f7768e" font-family="monospace" font-size="10" text-anchor="middle">Clone Union</text>
+  <text x="300" y="110" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">M.copyXY</text>
+  <text x="300" y="130" fill="#9aa4b2" font-family="monospace" font-size="8" text-anchor="middle">X UNION Y copy</text>
+
+  <path d="M375 110 L425 110" stroke="#9ece6a" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="400" y="100" fill="#9aa4b2" font-family="system-ui" font-size="8" text-anchor="middle">but</text>
+
+  <!-- Step 3: No-cloning axiom -->
+  <rect x="430" y="70" width="140" height="80" rx="8" fill="rgba(158, 206, 106, 0.15)" stroke="#9ece6a" stroke-width="1.5"/>
+  <text x="500" y="95" fill="#9ece6a" font-family="monospace" font-size="10" text-anchor="middle">No-Cloning</text>
+  <text x="500" y="110" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">M.no_copyXY</text>
+  <text x="500" y="130" fill="#9aa4b2" font-family="monospace" font-size="8" text-anchor="middle">CT.impossible</text>
+
+  <!-- Arrow down to conclusion -->
+  <path d="M300 155 L300 185" stroke="#9ece6a" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Conclusion -->
+  <rect x="150" y="190" width="300" height="80" rx="12" fill="rgba(158, 206, 106, 0.25)" stroke="#9ece6a" stroke-width="2"/>
+  <text x="300" y="220" fill="#9ece6a" font-family="monospace" font-size="12" font-weight="600" text-anchor="middle">
+    Eavesdropping is CT-Impossible
+  </text>
+  <text x="300" y="245" fill="#e6edf3" font-family="monospace" font-size="10" text-anchor="middle">
+    CT.impossible E.intercept
+  </text>
+  <text x="300" y="260" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">
+    superinfo_secure_against_eavesdropping
+  </text>
+
+  <!-- Footer explanation -->
+  <text x="300" y="290" fill="#9aa4b2" font-family="system-ui" font-size="9" text-anchor="middle">
+    Physical impossibility of cloning implies physical impossibility of eavesdropping
+  </text>
+</svg>

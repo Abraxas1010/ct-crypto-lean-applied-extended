@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0e14"/>
+      <stop offset="100%" style="stop-color:#121826"/>
+    </linearGradient>
+    <linearGradient id="modalityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7aa2f7;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#7aa2f7;stop-opacity:0.1"/>
+    </linearGradient>
+    <linearGradient id="taskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f7768e;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#f7768e;stop-opacity:0.1"/>
+    </linearGradient>
+    <linearGradient id="securityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9ece6a;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#9ece6a;stop-opacity:0.1"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="rgba(230,237,243,0.5)"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="450" y="35" fill="#e6edf3" font-family="system-ui" font-size="18" font-weight="600" text-anchor="middle">
+    Constructor-Theoretic Cryptography Architecture
+  </text>
+
+  <!-- Layer 1: Physical Modality -->
+  <rect x="40" y="60" width="200" height="120" rx="12" fill="url(#modalityGrad)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="140" y="85" fill="#7aa2f7" font-family="monospace" font-size="12" font-weight="600" text-anchor="middle">PHYSICAL MODALITY</text>
+  <text x="140" y="110" fill="#e6edf3" font-family="monospace" font-size="10" text-anchor="middle">PhysicalModality</text>
+  <text x="140" y="130" fill="#9aa4b2" font-family="monospace" font-size="10" text-anchor="middle">Phi : Prop -> Prop</text>
+  <text x="140" y="150" fill="#9aa4b2" font-family="monospace" font-size="10" text-anchor="middle">sound : Phi P -> P</text>
+  <text x="140" y="170" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">(not nucleus!)</text>
+
+  <!-- Arrow 1->2 -->
+  <path d="M245 120 L295 120" stroke="rgba(230,237,243,0.4)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: Contextuality Bridge -->
+  <rect x="300" y="60" width="200" height="120" rx="12" fill="url(#modalityGrad)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="400" y="85" fill="#7aa2f7" font-family="monospace" font-size="12" font-weight="600" text-anchor="middle">CONTEXTUALITY</text>
+  <text x="400" y="110" fill="#e6edf3" font-family="monospace" font-size="10" text-anchor="middle">NoGlobalSection</text>
+  <text x="400" y="130" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">triangle_no_global</text>
+  <text x="400" y="150" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">KS obstruction</text>
+  <text x="400" y="170" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">-> not Phi(HasGlobal)</text>
+
+  <!-- Arrow 2->3 -->
+  <path d="M505 120 L555 120" stroke="rgba(230,237,243,0.4)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: Task Algebra -->
+  <rect x="560" y="60" width="160" height="120" rx="12" fill="url(#taskGrad)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="640" y="85" fill="#f7768e" font-family="monospace" font-size="12" font-weight="600" text-anchor="middle">TASK ALGEBRA</text>
+  <text x="640" y="110" fill="#e6edf3" font-family="monospace" font-size="10" text-anchor="middle">TaskCT</text>
+  <text x="640" y="130" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">possible T :=</text>
+  <text x="640" y="145" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">exists c, impl c T</text>
+  <text x="640" y="170" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">seq | par closure</text>
+
+  <!-- Arrow 3->4 -->
+  <path d="M725 120 L775 120" stroke="rgba(230,237,243,0.4)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Layer 4: Security (top right) -->
+  <rect x="780" y="60" width="100" height="120" rx="12" fill="url(#securityGrad)" stroke="#9ece6a" stroke-width="1.5"/>
+  <text x="830" y="85" fill="#9ece6a" font-family="monospace" font-size="12" font-weight="600" text-anchor="middle">SECURITY</text>
+  <text x="830" y="110" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">superinfo</text>
+  <text x="830" y="125" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">_secure</text>
+  <text x="830" y="150" fill="#9aa4b2" font-family="monospace" font-size="8" text-anchor="middle">no_copyXY</text>
+  <text x="830" y="165" fill="#9aa4b2" font-family="monospace" font-size="8" text-anchor="middle">-> impossible</text>
+
+  <!-- Bottom row: Concrete witnesses -->
+  <text x="450" y="220" fill="#9aa4b2" font-family="system-ui" font-size="12" text-anchor="middle">Concrete Witnesses</text>
+
+  <!-- Triangle witness -->
+  <rect x="100" y="240" width="180" height="100" rx="8" fill="rgba(122, 162, 247, 0.1)" stroke="#7aa2f7" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="190" y="265" fill="#7aa2f7" font-family="monospace" font-size="11" text-anchor="middle">triangleModel</text>
+  <text x="190" y="285" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">a=b, b=c, a!=c</text>
+  <text x="190" y="305" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">Inconsistent!</text>
+  <text x="190" y="325" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">triangle_no_global</text>
+
+  <!-- QubitLike witness -->
+  <rect x="360" y="240" width="180" height="100" rx="8" fill="rgba(247, 118, 142, 0.1)" stroke="#f7768e" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="450" y="265" fill="#f7768e" font-family="monospace" font-size="11" text-anchor="middle">qubitLikeSuperinfo</text>
+  <text x="450" y="285" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">Bool x Bool substrate</text>
+  <text x="450" y="305" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">compBasis, diagBasis</text>
+  <text x="450" y="325" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">not_implements_copyUnion</text>
+
+  <!-- Composition lemma -->
+  <rect x="620" y="240" width="180" height="100" rx="8" fill="rgba(158, 206, 106, 0.1)" stroke="#9ece6a" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="710" y="265" fill="#9ece6a" font-family="monospace" font-size="11" text-anchor="middle">composed_security</text>
+  <text x="710" y="285" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">Attack requires sub</text>
+  <text x="710" y="305" fill="#9aa4b2" font-family="monospace" font-size="9" text-anchor="middle">Sub impossible</text>
+  <text x="710" y="325" fill="#9ece6a" font-family="monospace" font-size="9" text-anchor="middle">-> Attack impossible</text>
+
+  <!-- Arrows from witnesses up -->
+  <path d="M190 240 L190 185" stroke="rgba(230,237,243,0.25)" stroke-width="1" fill="none" marker-end="url(#arrow)" stroke-dasharray="3,3"/>
+  <path d="M450 240 L640 185" stroke="rgba(230,237,243,0.25)" stroke-width="1" fill="none" marker-end="url(#arrow)" stroke-dasharray="3,3"/>
+  <path d="M710 240 L830 185" stroke="rgba(230,237,243,0.25)" stroke-width="1" fill="none" marker-end="url(#arrow)" stroke-dasharray="3,3"/>
+
+  <!-- Footer -->
+  <text x="450" y="380" fill="#9aa4b2" font-family="system-ui" font-size="10" text-anchor="middle">
+    Constructor-Theoretic Cryptography: Physical impossibility guarantees security
+  </text>
+</svg>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0e14"/>
+      <stop offset="100%" style="stop-color:#121826"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="rgba(230,237,243,0.5)"/>
+    </marker>
+  </defs>
+
+  <rect width="600" height="450" fill="url(#bg2)"/>
+
+  <text x="300" y="30" fill="#e6edf3" font-family="system-ui" font-size="16" font-weight="600" text-anchor="middle">
+    Proof Dependency Graph
+  </text>
+
+  <!-- Level 1: Foundation -->
+  <circle cx="100" cy="80" r="35" fill="rgba(122, 162, 247, 0.2)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="100" y="76" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Physical</text>
+  <text x="100" y="88" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Modality</text>
+
+  <circle cx="300" cy="80" r="35" fill="rgba(122, 162, 247, 0.2)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="300" y="76" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Empirical</text>
+  <text x="300" y="88" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Model</text>
+
+  <circle cx="500" cy="80" r="35" fill="rgba(247, 118, 142, 0.2)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="500" y="76" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Task</text>
+  <text x="500" y="88" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">Variable</text>
+
+  <!-- Level 2: Bridge -->
+  <path d="M130 100 L170 140" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M280 105 L230 140" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="200" cy="170" r="40" fill="rgba(122, 162, 247, 0.2)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="200" y="163" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">contextuality</text>
+  <text x="200" y="175" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">_implies</text>
+  <text x="200" y="187" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">_physImpossible</text>
+
+  <path d="M320 105 L380 140" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M480 105 L420 140" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="400" cy="170" r="35" fill="rgba(247, 118, 142, 0.2)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="400" y="166" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">TaskCT</text>
+  <text x="400" y="178" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">possible</text>
+
+  <!-- Level 3: Witnesses -->
+  <path d="M200 210 L200 250" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="200" cy="280" r="35" fill="rgba(122, 162, 247, 0.2)" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="200" y="276" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">triangle</text>
+  <text x="200" y="288" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">_no_global</text>
+
+  <path d="M400 205 L400 245" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="400" cy="280" r="40" fill="rgba(247, 118, 142, 0.2)" stroke="#f7768e" stroke-width="1.5"/>
+  <text x="400" y="270" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">Superinfo</text>
+  <text x="400" y="282" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">Medium</text>
+  <text x="400" y="294" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">no_copyXY</text>
+
+  <!-- Level 4: Security -->
+  <path d="M230 305 L270 345" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M370 310 L330 345" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="300" cy="380" r="45" fill="rgba(158, 206, 106, 0.25)" stroke="#9ece6a" stroke-width="2"/>
+  <text x="300" y="372" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">superinfo_secure</text>
+  <text x="300" y="386" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">_against</text>
+  <text x="300" y="400" fill="#e6edf3" font-family="monospace" font-size="9" text-anchor="middle">_eavesdropping</text>
+
+  <!-- Composition -->
+  <path d="M430 310 L500 345" stroke="rgba(230,237,243,0.4)" stroke-width="1" marker-end="url(#arr)"/>
+
+  <circle cx="520" cy="380" r="40" fill="rgba(158, 206, 106, 0.25)" stroke="#9ece6a" stroke-width="1.5"/>
+  <text x="520" y="376" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">composed</text>
+  <text x="520" y="388" fill="#e6edf3" font-family="monospace" font-size="8" text-anchor="middle">_security</text>
+
+  <!-- qubitLike -->
+  <circle cx="80" cy="380" r="35" fill="rgba(247, 118, 142, 0.2)" stroke="#f7768e" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="80" y="376" fill="#e6edf3" font-family="monospace" font-size="7" text-anchor="middle">qubitLike</text>
+  <text x="80" y="388" fill="#e6edf3" font-family="monospace" font-size="7" text-anchor="middle">Superinfo</text>
+  <path d="M110 360 L170 320" stroke="rgba(230,237,243,0.25)" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Legend -->
+  <rect x="20" y="420" width="12" height="12" fill="rgba(122, 162, 247, 0.3)" stroke="#7aa2f7" stroke-width="1"/>
+  <text x="38" y="430" fill="#9aa4b2" font-family="system-ui" font-size="10">Modality</text>
+
+  <rect x="100" y="420" width="12" height="12" fill="rgba(247, 118, 142, 0.3)" stroke="#f7768e" stroke-width="1"/>
+  <text x="118" y="430" fill="#9aa4b2" font-family="system-ui" font-size="10">Task</text>
+
+  <rect x="160" y="420" width="12" height="12" fill="rgba(158, 206, 106, 0.3)" stroke="#9ece6a" stroke-width="1"/>
+  <text x="178" y="430" fill="#9aa4b2" font-family="system-ui" font-size="10">Security</text>
+</svg>
