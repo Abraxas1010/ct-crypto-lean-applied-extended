@@ -18,6 +18,41 @@
 
 Part of the broader HeytingLean formal verification project: https://apoth3osis.io
 
+## Abstract
+
+**Why this matters:** Traditional cryptographic security relies on computational hardness assumptions—problems believed to be difficult for classical or quantum computers. This approach is fundamentally fragile: a single algorithmic breakthrough could invalidate entire cryptographic ecosystems overnight.
+
+**A new foundation:** This repository presents a radically different approach grounded in **Constructor Theory**, the Deutsch-Marletto framework that reformulates physics in terms of which transformations are *possible* and which are *impossible*. Instead of computational complexity, we derive security from **physical law itself**.
+
+**The key insight:** In quantum mechanics, certain information (superinformation) cannot be cloned—not because cloning is computationally hard, but because *no physical process can accomplish it*. We formalize this as:
+
+> If eavesdropping requires cloning a superinformation medium, and cloning is physically impossible, then eavesdropping is physically impossible.
+
+This is not a computational assumption. It is a theorem about the structure of physical reality.
+
+**What we formalize:**
+- A **physical possibility modality** with the correct Constructor-Theoretic polarity (`Φ P → P`, not inflationary)
+- A bridge from **Kochen-Specker contextuality** (no-hidden-variables) to physical impossibility
+- **Task algebra** with constructor existence semantics
+- **Superinformation media** where individual observables are clonable but their union is not
+- A **main security theorem** proving no-cloning implies eavesdropping impossibility
+- **Compositional security transfer** (completely axiom-free!)
+
+**What you can do with this:**
+- Use the formalized structures as a foundation for **verified quantum cryptography**
+- Instantiate the abstract interfaces with concrete quantum-mechanical models
+- Build **composable security proofs** for protocols like BB84, quantum commitments, etc.
+- Explore the connection between **contextuality** and **cryptographic hardness**
+
+**Future research directions:**
+- Concrete instantiation with quantum-mechanical `PhysicalModality`
+- Formalization of BB84 and other QKD protocols within this framework
+- Extension to **thermodynamic** impossibility (second law)
+- Connection to **complexity-theoretic** security for hybrid guarantees
+- Categorical semantics and the topos-theoretic perspective
+
+---
+
 ## Results (One Story)
 
 This repository mechanizes the **Constructor-Theoretic approach to cryptographic security**:
