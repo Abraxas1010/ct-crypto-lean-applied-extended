@@ -44,8 +44,14 @@ This is not a computational assumption. It is a theorem about the structure of p
 - Build **composable security proofs** for protocols like BB84, quantum commitments, etc.
 - Explore the connection between **contextuality** and **cryptographic hardness**
 
+**NEW: Photoemission Physics Extension:**
+- **Typed quantum channels** (CPTP maps between Hilbert substrates)
+- **Three-step photoemission model** (Malhotra): Absorption → Transport → Emission
+- **TaskCT instance** for photoemission enabling CT composition lemmas
+- **Energy conservation constraint**: `photonEnergy < bandGap → absorption impossible`
+- **Coherence enhancement** and Fermi Golden Rule interface layers
+
 **Future research directions:**
-- Concrete instantiation with quantum-mechanical `PhysicalModality`
 - Formalization of BB84 and other QKD protocols within this framework
 - Extension to **thermodynamic** impossibility (second law)
 - Connection to **complexity-theoretic** security for hybrid guarantees
@@ -138,6 +144,13 @@ Declarations visualized with UMAP embeddings:
 | **Composition Lemmas** | `composed_security`, `impossible_seq_of_impossible` |
 | **Triangle Witness** | Concrete KS contextuality obstruction (`triangle_no_global`) |
 | **QubitLike Witness** | Concrete superinformation example (Bool x Bool) |
+| **HilbertSubstrate** | Finite-dimensional Hilbert space typing layer |
+| **QuantumChannel** | CPTP maps with optional Kraus decomposition |
+| **PhotoemissionSystem** | Three-step model: absorption, transport, emission |
+| **photoemissionTaskCT** | TaskCT instance for photoemission composition |
+| **efficiency_factorization** | η = A·T·D under Markov assumption |
+| **energy_conservation_required** | photonEnergy < bandGap → absorption impossible |
+| **coherence_enhancement** | Coherent transport → enhancement factor > 1 |
 
 ---
 
@@ -274,9 +287,22 @@ CT_Crypto_Repo/
           Quantum/
             ContextualitySite.lean      # KS measurement contexts
             EmpiricalModel.lean         # Empirical models, triangle_no_global
+      Physics/
+        Photoemission.lean              # Umbrella import
+        Substrate/
+          Hilbert.lean                  # Finite-dim Hilbert typing layer
+        Channels/
+          CPTP.lean                     # Typed quantum channels
+        Photoemission/
+          Tasks.lean                    # Three-step model
+          CTBridge.lean                 # TaskCT instance + constraints
+          Efficiency.lean               # η = A·T·D factorization
+          Coherence.lean                # Coherence enhancement theorems
+          Hamiltonian.lean              # Fermi Golden Rule interface
       Tests/
         Crypto/
           ConstructiveHardnessSanity.lean
+        PhotoemissionSanity.lean        # Photoemission API sanity tests
     scripts/
       verify_ct_crypto.sh             # One-command verification
     artifacts/
