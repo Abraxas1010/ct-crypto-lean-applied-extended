@@ -101,18 +101,18 @@ Explore the proof structure in 2D and 3D:
 <td align="center" width="50%">
 <strong>2D Proof Map</strong><br/>
 <em>Pan, zoom, search declarations</em><br/>
-<a href="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_2d.html">
+<a href="https://abraxas1010.github.io/ct-crypto-lean/RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_2d.html">
   <img src="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_2d_preview.svg" alt="UMAP 2D preview" width="100%"/>
 </a><br/>
-<a href="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_2d.html">ct_crypto_2d.html</a>
+<a href="https://abraxas1010.github.io/ct-crypto-lean/RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_2d.html">Interactive 2D Viewer</a>
 </td>
 <td align="center" width="50%">
 <strong>3D Proof Map</strong><br/>
 <em>Rotate, zoom, explore clusters</em><br/>
-<a href="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d.html">
-  <img src="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d_preview.svg" alt="UMAP 3D preview" width="100%"/>
+<a href="https://abraxas1010.github.io/ct-crypto-lean/RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d.html">
+  <img src="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d_preview.svg" alt="UMAP 3D preview (animated)" width="100%"/>
 </a><br/>
-<a href="RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d.html">ct_crypto_3d.html</a>
+<a href="https://abraxas1010.github.io/ct-crypto-lean/RESEARCHER_BUNDLE/artifacts/visuals/ct_crypto_3d.html">Interactive 3D Viewer</a>
 </td>
 </tr>
 </table>

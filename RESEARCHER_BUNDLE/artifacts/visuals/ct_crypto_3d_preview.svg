@@ -1,77 +1,230 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
-  <defs>
-    <linearGradient id="bgp3" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0b0e14"/>
-      <stop offset="100%" style="stop-color:#121826"/>
-    </linearGradient>
-    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#7aa2f7;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#7aa2f7;stop-opacity:0"/>
-    </radialGradient>
-    <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#f7768e;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#f7768e;stop-opacity:0"/>
-    </radialGradient>
-    <radialGradient id="glow3" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#9ece6a;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#9ece6a;stop-opacity:0"/>
-    </radialGradient>
-  </defs>
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="CT Crypto UMAP 3D preview (animated)">
+<defs>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect x="0" y="0" width="1200" height="700" fill="#0b0f14"/>
+<text x="40" y="28" fill="#ffffff" font-size="18" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial">CT Crypto — 3D Proof Map</text>
+<text x="40" y="44" fill="#b8c7d9" font-size="11" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial">Animated rotation preview • Click for interactive WebGL viewer</text>
+<rect x="40" y="55" width="1120" height="600" fill="#0f1721" stroke="#1c2a3a" stroke-width="1" rx="4"/>
 
-  <rect width="400" height="300" fill="url(#bgp3)"/>
+<!-- Edges (static, faded) -->
+<g stroke="#3b4b5d" stroke-opacity="0.2" stroke-width="1">
+  <line x1="200" y1="180" x2="400" y2="280"/>
+  <line x1="240" y1="210" x2="400" y2="280"/>
+  <line x1="400" y1="280" x2="580" y2="240"/>
+  <line x1="160" y1="380" x2="280" y2="350"/>
+  <line x1="280" y1="350" x2="400" y2="280"/>
+  <line x1="580" y1="240" x2="720" y2="350"/>
+  <line x1="720" y1="350" x2="850" y2="400"/>
+  <line x1="850" y1="400" x2="980" y2="370"/>
+  <line x1="500" y1="520" x2="600" y2="540"/>
+  <line x1="600" y1="540" x2="850" y2="400"/>
+</g>
 
-  <text x="200" y="25" fill="#e6edf3" font-family="system-ui" font-size="12" font-weight="600" text-anchor="middle">
-    CT Crypto 3D Proof Map (Preview)
-  </text>
+<!-- PhysicalModality (blue) - orbiting animation -->
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="200;220;200;180;200" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="180;160;140;160;180" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>PhysicalModality</title>
+</circle>
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="240;260;240;220;240" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="210;190;170;190;210" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>PhysicalModality.not_toFun_of_not</title>
+</circle>
 
-  <!-- Glows for 3D effect -->
-  <ellipse cx="100" cy="120" rx="60" ry="40" fill="url(#glow1)"/>
-  <ellipse cx="220" cy="150" rx="70" ry="45" fill="url(#glow2)"/>
-  <ellipse cx="320" cy="200" rx="55" ry="35" fill="url(#glow3)"/>
+<!-- Bridge (purple) -->
+<circle fill="#bb9af7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="400;430;400;370;400" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="280;260;280;300;280" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="7;8;7;6;7" dur="8s" repeatCount="indefinite"/>
+  <title>contextuality_implies_physImpossible</title>
+</circle>
+<circle fill="#bb9af7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="370;400;370;340;370" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="310;290;310;330;310" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>triangle_physImpossible</title>
+</circle>
 
-  <!-- Modality cluster (blue) - with depth effect -->
-  <circle cx="75" cy="105" r="8" fill="rgba(122, 162, 247, 0.3)" stroke="#7aa2f7" stroke-width="0.5"/>
-  <circle cx="95" cy="95" r="10" fill="rgba(122, 162, 247, 0.4)" stroke="#7aa2f7" stroke-width="1"/>
-  <circle cx="115" cy="115" r="14" fill="rgba(122, 162, 247, 0.5)" stroke="#7aa2f7" stroke-width="1.5"/>
-  <circle cx="90" cy="130" r="9" fill="rgba(122, 162, 247, 0.35)" stroke="#7aa2f7" stroke-width="0.8"/>
-  <circle cx="120" cy="90" r="7" fill="rgba(122, 162, 247, 0.25)" stroke="#7aa2f7" stroke-width="0.5"/>
+<!-- Contextuality (blue) -->
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="160;180;160;140;160" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="380;360;340;360;380" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>EmpiricalModel</title>
+</circle>
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="190;210;190;170;190" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="350;330;310;330;350" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>HasGlobalSection</title>
+</circle>
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="280;310;280;250;280" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="350;330;350;370;350" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>NoGlobalSection</title>
+</circle>
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="140;160;140;120;140" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="450;430;410;430;450" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>triangleModel</title>
+</circle>
+<circle fill="#7aa2f7" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="200;220;200;180;200" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="420;400;380;400;420" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>triangle_no_global</title>
+</circle>
 
-  <!-- Task cluster (red) - with depth effect -->
-  <circle cx="195" cy="145" r="9" fill="rgba(247, 118, 142, 0.35)" stroke="#f7768e" stroke-width="0.8"/>
-  <circle cx="215" cy="135" r="12" fill="rgba(247, 118, 142, 0.5)" stroke="#f7768e" stroke-width="1.5"/>
-  <circle cx="235" cy="155" r="15" fill="rgba(247, 118, 142, 0.4)" stroke="#f7768e" stroke-width="1"/>
-  <circle cx="220" cy="170" r="10" fill="rgba(247, 118, 142, 0.3)" stroke="#f7768e" stroke-width="0.5"/>
-  <circle cx="250" cy="140" r="8" fill="rgba(247, 118, 142, 0.25)" stroke="#f7768e" stroke-width="0.5"/>
+<!-- Task (red/pink) -->
+<circle fill="#f7768e" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="580;620;580;540;580" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="240;220;200;220;240" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>TaskCT</title>
+</circle>
+<circle fill="#f7768e" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="620;660;620;580;620" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="210;190;170;190;210" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>Task</title>
+</circle>
+<circle fill="#f7768e" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="650;690;650;610;650" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="240;220;200;220;240" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>Variable</title>
+</circle>
+<circle fill="#f7768e" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="680;720;680;640;680" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="300;280;260;280;300" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>TaskCT.possible</title>
+</circle>
+<circle fill="#f7768e" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="720;760;720;680;720" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="270;250;230;250;270" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>TaskCT.impossible</title>
+</circle>
 
-  <!-- Security cluster (green) - with depth effect -->
-  <circle cx="305" cy="195" r="12" fill="rgba(158, 206, 106, 0.5)" stroke="#9ece6a" stroke-width="1.5"/>
-  <circle cx="330" cy="185" r="10" fill="rgba(158, 206, 106, 0.4)" stroke="#9ece6a" stroke-width="1"/>
-  <circle cx="290" cy="215" r="8" fill="rgba(158, 206, 106, 0.3)" stroke="#9ece6a" stroke-width="0.5"/>
-  <circle cx="340" cy="210" r="11" fill="rgba(158, 206, 106, 0.35)" stroke="#9ece6a" stroke-width="0.8"/>
+<!-- Information (orange) -->
+<circle fill="#ff9e64" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="720;760;720;680;720" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="350;330;310;330;350" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>InfoVariable</title>
+</circle>
+<circle fill="#ff9e64" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="780;820;780;740;780" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="380;360;340;360;380" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>SuperinformationMedium</title>
+</circle>
 
-  <!-- Contextuality sub-cluster -->
-  <circle cx="160" cy="190" r="10" fill="rgba(122, 162, 247, 0.4)" stroke="#7aa2f7" stroke-width="1"/>
-  <circle cx="175" cy="210" r="8" fill="rgba(122, 162, 247, 0.3)" stroke="#7aa2f7" stroke-width="0.5"/>
-  <circle cx="145" cy="205" r="9" fill="rgba(122, 162, 247, 0.35)" stroke="#7aa2f7" stroke-width="0.8"/>
+<!-- QubitLike (yellow/orange) -->
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="500;540;500;460;500" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="520;500;480;500;520" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>compBasis</title>
+</circle>
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="540;580;540;500;540" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="540;520;500;520;540" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>diagBasis</title>
+</circle>
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="520;560;520;480;520" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="570;550;530;550;570" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>QubitCtor</title>
+</circle>
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="580;620;580;540;580" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="560;540;520;540;560" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>qubitLikeTaskCT</title>
+</circle>
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="600;640;600;560;600" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="540;520;500;520;540" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>not_implements_copyUnion</title>
+</circle>
+<circle fill="#e0af68" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="640;680;640;600;640" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="520;500;480;500;520" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="6;7;6;5;6" dur="8s" repeatCount="indefinite"/>
+  <title>qubitLikeSuperinfo</title>
+</circle>
 
-  <!-- kNN edges with depth -->
-  <line x1="115" y1="115" x2="195" y2="145" stroke="rgba(230,237,243,0.12)" stroke-width="0.5"/>
-  <line x1="160" y1="190" x2="215" y2="135" stroke="rgba(230,237,243,0.12)" stroke-width="0.5"/>
-  <line x1="235" y1="155" x2="305" y2="195" stroke="rgba(230,237,243,0.12)" stroke-width="0.5"/>
-  <line x1="95" y1="95" x2="160" y2="190" stroke="rgba(230,237,243,0.08)" stroke-width="0.5"/>
+<!-- Security (green) - MAIN THEOREMS with glow -->
+<circle fill="#9ece6a" fill-opacity="0.95" stroke="#ffffff" stroke-width="2">
+  <animate attributeName="cx" values="850;900;850;800;850" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="400;380;360;380;400" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="8;10;8;6;8" dur="8s" repeatCount="indefinite"/>
+  <title>superinfo_secure_against_eavesdropping</title>
+</circle>
+<circle fill="#9ece6a" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="900;940;900;860;900" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="440;420;400;420;440" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>EavesdroppingStrategy</title>
+</circle>
+<circle fill="#9ece6a" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="920;960;920;880;920" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="400;380;360;380;400" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>SecureAgainstEavesdropping</title>
+</circle>
 
-  <!-- Legend -->
-  <rect x="15" y="255" width="10" height="10" fill="rgba(122, 162, 247, 0.4)" stroke="#7aa2f7"/>
-  <text x="30" y="264" fill="#9aa4b2" font-family="system-ui" font-size="9">Modality</text>
+<!-- Composition (cyan) -->
+<circle fill="#73daca" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="980;1020;980;940;980" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="370;350;330;350;370" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>TaskSpec</title>
+</circle>
+<circle fill="#73daca" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="1020;1060;1020;980;1020" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="400;380;360;380;400" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>TaskSpec.toPhysicalModality</title>
+</circle>
+<circle fill="#73daca" fill-opacity="0.95" stroke="#ffffff" stroke-width="2">
+  <animate attributeName="cx" values="950;990;950;910;950" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="470;450;430;450;470" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="7;9;7;5;7" dur="8s" repeatCount="indefinite"/>
+  <title>composed_security</title>
+</circle>
+<circle fill="#73daca" fill-opacity="0.9" stroke="#0b0f14" stroke-width="1">
+  <animate attributeName="cx" values="1000;1040;1000;960;1000" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="cy" values="440;420;400;420;440" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="r" values="5;6;5;4;5" dur="8s" repeatCount="indefinite"/>
+  <title>impossible_seq_of_impossible</title>
+</circle>
 
-  <rect x="100" y="255" width="10" height="10" fill="rgba(247, 118, 142, 0.4)" stroke="#f7768e"/>
-  <text x="115" y="264" fill="#9aa4b2" font-family="system-ui" font-size="9">Task</text>
+<!-- Legend -->
+<rect x="920" y="550" width="200" height="100" fill="#0f1721" stroke="#1c2a3a" stroke-width="1" rx="6"/>
+<circle cx="940" cy="570" r="5" fill="#7aa2f7" fill-opacity="0.9"/>
+<text x="955" y="574" fill="#b8c7d9" font-size="10" font-family="ui-sans-serif">Modality/Contextuality</text>
+<circle cx="940" cy="590" r="5" fill="#bb9af7" fill-opacity="0.9"/>
+<text x="955" y="594" fill="#b8c7d9" font-size="10" font-family="ui-sans-serif">Bridge</text>
+<circle cx="940" cy="610" r="5" fill="#f7768e" fill-opacity="0.9"/>
+<text x="955" y="614" fill="#b8c7d9" font-size="10" font-family="ui-sans-serif">Task</text>
+<circle cx="940" cy="630" r="5" fill="#9ece6a" fill-opacity="0.9"/>
+<text x="955" y="634" fill="#b8c7d9" font-size="10" font-family="ui-sans-serif">Security</text>
 
-  <rect x="170" y="255" width="10" height="10" fill="rgba(158, 206, 106, 0.4)" stroke="#9ece6a"/>
-  <text x="185" y="264" fill="#9aa4b2" font-family="system-ui" font-size="9">Security</text>
-
-  <text x="200" y="285" fill="#9aa4b2" font-family="system-ui" font-size="8" text-anchor="middle">
-    Click for interactive 3D viewer (WebGL)
-  </text>
+<text x="600" y="680" fill="#b8c7d9" font-size="10" font-family="ui-sans-serif" text-anchor="middle">Click for interactive 3D WebGL viewer: ct_crypto_3d.html</text>
 </svg>
