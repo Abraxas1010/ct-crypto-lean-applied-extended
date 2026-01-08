@@ -72,7 +72,31 @@ theorem possible_par {T U : Task σ} :
 
 end TaskCT
 
+/-- A slightly strengthened `TaskCT` interface with an explicit identity constructor.
+
+This is a small step toward CT Principles II–V style algebraic completeness:
+it makes it possible to talk about “doing nothing” as a constructor, and to
+state unit laws at the task level.
+
+We do **not** require definitional equalities on constructors here (e.g. `seqCtor id c = c`),
+only that there exists a constructor implementing the identity task.
+-/
+structure TaskCTFull (σ : Type u) extends TaskCT σ where
+  /-- Identity constructor (does nothing). -/
+  idCtor : Ctor
+  /-- Identity constructor implements the identity task. -/
+  implements_id : implements idCtor Task.id
+
+namespace TaskCTFull
+
+variable {σ : Type u} (CT : TaskCTFull σ)
+
+/-- `Task.id` is possible in any `TaskCTFull`. -/
+theorem possible_id : CT.toTaskCT.possible (Task.id (σ := σ)) := by
+  exact ⟨CT.idCtor, CT.implements_id⟩
+
+end TaskCTFull
+
 end CT
 end Constructor
 end HeytingLean
-

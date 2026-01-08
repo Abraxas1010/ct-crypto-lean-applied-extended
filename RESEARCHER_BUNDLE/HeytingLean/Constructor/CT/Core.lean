@@ -56,17 +56,41 @@ namespace Task
 
 variable {σ : Type u}
 
+/-- Identity task (does nothing): empty list of arcs. -/
+def id : Task σ :=
+  ⟨[]⟩
+
 /-- Serial composition of tasks: at the syntactic level this is just list
 concatenation.  Algebraic laws connecting this to semantics live in the
 CT nucleus and substrate adapters. -/
 def seq (T U : Task σ) : Task σ :=
   ⟨T.arcs ++ U.arcs⟩
 
+/-- `id` is a left unit for serial composition (syntactically). -/
+@[simp] theorem seq_id_left (T : Task σ) : seq id T = T := by
+  cases T
+  rfl
+
+/-- `id` is a right unit for serial composition (syntactically). -/
+@[simp] theorem seq_id_right (T : Task σ) : seq T id = T := by
+  cases T
+  simp [seq, id]
+
 /-- Parallel composition of tasks: we reuse the same carrier as serial
 composition (list concatenation).  Substrate‑specific models may give
 different semantics to `seq` and `par`. -/
 def par (T U : Task σ) : Task σ :=
   ⟨T.arcs ++ U.arcs⟩
+
+/-- `id` is a left unit for parallel composition (syntactically). -/
+@[simp] theorem par_id_left (T : Task σ) : par id T = T := by
+  cases T
+  rfl
+
+/-- `id` is a right unit for parallel composition (syntactically). -/
+@[simp] theorem par_id_right (T : Task σ) : par T id = T := by
+  cases T
+  simp [par, id]
 
 end Task
 
