@@ -4,6 +4,7 @@ import HeytingLean.Crypto.QKD.BB84.Constructors
 import HeytingLean.Crypto.QKD.BB84.Superinfo
 import HeytingLean.Crypto.QKD.BB84.Eavesdropping
 import HeytingLean.Crypto.QKD.BB84.Security
+import HeytingLean.Crypto.QKD.BB84.InfoDisturbance
 import HeytingLean.Crypto.QKD.BB84.ErrorRate
 import HeytingLean.Crypto.QKD.BB84.MultiRound
 import HeytingLean.Crypto.QKD.BB84.ProbabilisticSecurity
