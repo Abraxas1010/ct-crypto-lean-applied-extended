@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use rand::RngCore;
@@ -12,6 +13,7 @@ use crate::crypto::{
 };
 use crate::package::*;
 use crate::zk::generate_proof;
+use crate::zk::verify_proof;
 
 pub struct RecipientPublicKey {
     pub ml_kem_pk: Vec<u8>,
@@ -140,9 +142,24 @@ pub fn wrap(data: &[u8], config: WrapConfig) -> Result<CTWrapPackage, Box<dyn st
     })
 }
 
-pub fn unwrap(
+pub struct UnwrapConfig {
+    pub verify_zk_proof: bool,
+    pub build_dir: Option<PathBuf>,
+}
+
+impl Default for UnwrapConfig {
+    fn default() -> Self {
+        Self {
+            verify_zk_proof: false,
+            build_dir: None,
+        }
+    }
+}
+
+pub fn unwrap_with_config(
     package: &CTWrapPackage,
     recipient_keypair: &MlKemKeyPair,
+    config: UnwrapConfig,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let recipient_id: [u8; 32] = Sha3_256::digest(&recipient_keypair.public_key).into();
     let our_encap = package
@@ -190,7 +207,26 @@ pub fn unwrap(
         return Err("content hash mismatch".into());
     }
 
+    if config.verify_zk_proof {
+        if let Some(zk) = &package.zk_proof {
+            let build_dir = config
+                .build_dir
+                .ok_or("verify_zk_proof requested but build_dir was not provided")?;
+            let result = verify_proof(zk, &build_dir)?;
+            if !result.valid {
+                return Err("zk proof verification failed".into());
+            }
+        }
+    }
+
     Ok(plaintext)
+}
+
+pub fn unwrap(
+    package: &CTWrapPackage,
+    recipient_keypair: &MlKemKeyPair,
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    unwrap_with_config(package, recipient_keypair, UnwrapConfig::default())
 }
 
 fn prepare_aad(content_hash: &[u8; 32], timestamp: u64, config: &WrapConfig) -> Vec<u8> {

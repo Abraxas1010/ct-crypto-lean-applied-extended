@@ -76,3 +76,52 @@ fn zk_e2e_happy_path() {
 
     eprintln!("ZK e2e test passed: proof generated and verified");
 }
+
+#[test]
+#[ignore] // Run with: cargo test -- --ignored zk_e2e
+fn zk_e2e_verify_proof() {
+    if !zk_toolchain_available() {
+        eprintln!("Skipping ZK e2e test: toolchain not available");
+        return;
+    }
+
+    use ct_wrap::crypto::MlKemKeyPair;
+    use ct_wrap::wrap::{unwrap_with_config, wrap, RecipientPublicKey, UnwrapConfig, WrapConfig};
+    use ct_wrap::zk::verify_proof;
+    use std::collections::HashMap;
+    use std::path::PathBuf;
+
+    let recipient = MlKemKeyPair::generate().unwrap();
+    let data = b"ZK test payload for data_commitment circuit";
+
+    let config = WrapConfig {
+        recipients: vec![RecipientPublicKey {
+            ml_kem_pk: recipient.public_key.clone(),
+            x25519_pk: None,
+        }],
+        signer: None,
+        generate_zk_proof: true,
+        zk_circuit: Some("data_commitment".to_string()),
+        content_type: Some("application/octet-stream".to_string()),
+        access_policy: None,
+        custom_metadata: HashMap::new(),
+    };
+
+    let package = wrap(data, config).unwrap();
+
+    // Verify proof standalone
+    let result = verify_proof(
+        package.zk_proof.as_ref().unwrap(),
+        Path::new("build/circuits"),
+    )
+    .unwrap();
+    assert!(result.valid);
+
+    // Verify during unwrap
+    let config = UnwrapConfig {
+        verify_zk_proof: true,
+        build_dir: Some(PathBuf::from("build/circuits")),
+    };
+    let recovered = unwrap_with_config(&package, &recipient, config).unwrap();
+    assert_eq!(data.to_vec(), recovered);
+}
