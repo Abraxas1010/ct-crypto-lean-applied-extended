@@ -6,7 +6,10 @@
 use zeroize::Zeroize;
 
 use pqcrypto_kyber::kyber1024;
-use pqcrypto_traits::kem as kem_traits;
+use pqcrypto_traits::kem::Ciphertext as KemCiphertextTrait;
+use pqcrypto_traits::kem::PublicKey as KemPublicKeyTrait;
+use pqcrypto_traits::kem::SecretKey as KemSecretKeyTrait;
+use pqcrypto_traits::kem::SharedSecret as KemSharedSecretTrait;
 
 use super::CryptoError;
 
@@ -27,17 +30,19 @@ impl MlKemKeyPair {
     pub fn generate() -> Result<Self, CryptoError> {
         let (pk, sk) = kyber1024::keypair();
         Ok(Self {
-            public_key: pk.as_bytes().to_vec(),
-            secret_key: sk.as_bytes().to_vec(),
+            public_key: KemPublicKeyTrait::as_bytes(&pk).to_vec(),
+            secret_key: KemSecretKeyTrait::as_bytes(&sk).to_vec(),
         })
     }
 
     /// Decapsulate to recover shared secret.
     pub fn decapsulate(&self, ciphertext: &[u8]) -> Result<Vec<u8>, CryptoError> {
-        let sk = kyber1024::SecretKey::from_bytes(&self.secret_key).map_err(|_| CryptoError::InvalidKey)?;
-        let ct = kyber1024::Ciphertext::from_bytes(ciphertext).map_err(|_| CryptoError::InvalidCiphertext)?;
+        let sk = <kyber1024::SecretKey as KemSecretKeyTrait>::from_bytes(&self.secret_key)
+            .map_err(|_| CryptoError::InvalidKey)?;
+        let ct = <kyber1024::Ciphertext as KemCiphertextTrait>::from_bytes(ciphertext)
+            .map_err(|_| CryptoError::InvalidCiphertext)?;
         let ss = kyber1024::decapsulate(&ct, &sk);
-        Ok(ss.as_bytes().to_vec())
+        Ok(KemSharedSecretTrait::as_bytes(&ss).to_vec())
     }
 
     /// Serialize public key for distribution.
@@ -59,10 +64,11 @@ impl Drop for MlKemKeyPair {
 
 /// Encapsulate a shared secret to a recipient's public key.
 pub fn encapsulate(recipient_public_key: &[u8]) -> Result<MlKemEncapsulation, CryptoError> {
-    let pk = kyber1024::PublicKey::from_bytes(recipient_public_key).map_err(|_| CryptoError::InvalidKey)?;
+    let pk = <kyber1024::PublicKey as KemPublicKeyTrait>::from_bytes(recipient_public_key)
+        .map_err(|_| CryptoError::InvalidKey)?;
     let (ss, ct) = kyber1024::encapsulate(&pk);
     Ok(MlKemEncapsulation {
-        ciphertext: ct.as_bytes().to_vec(),
-        shared_secret: ss.as_bytes().to_vec(),
+        ciphertext: KemCiphertextTrait::as_bytes(&ct).to_vec(),
+        shared_secret: KemSharedSecretTrait::as_bytes(&ss).to_vec(),
     })
 }

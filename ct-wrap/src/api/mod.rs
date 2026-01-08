@@ -11,7 +11,8 @@ use axum::{
 };
 use base64::Engine;
 use serde::{Deserialize, Serialize};
-use tower_governor::{GovernorConfig, GovernorLayer};
+use tower_governor::governor::GovernorConfigBuilder;
+use tower_governor::GovernorLayer;
 
 use crate::crypto::{MlKemKeyPair};
 use crate::package::CTWrapPackage;
@@ -33,7 +34,11 @@ impl Default for ApiState {
 }
 
 pub fn router(state: ApiState) -> Router {
-    let governor_conf = GovernorConfig::default();
+    let governor_conf = Arc::new(
+        GovernorConfigBuilder::default()
+            .finish()
+            .expect("tower_governor default config should build"),
+    );
     Router::new()
         .route("/health", get(|| async { "ok" }))
         .route("/api/v1/wrap", post(wrap_handler))

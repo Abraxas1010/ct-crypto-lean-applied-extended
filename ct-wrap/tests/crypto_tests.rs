@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use ct_wrap::crypto::{
-    decrypt_aes_gcm_siv, encrypt_aes_gcm_siv, encapsulate, derive_key, verify_signature, MlDsaKeyPair,
+    decrypt_aes_gcm_siv, encrypt_aes_gcm_siv, encapsulate, verify_signature, MlDsaKeyPair,
     MlKemKeyPair,
 };
 use ct_wrap::wrap::{unwrap as unwrap_pkg, wrap as wrap_pkg, RecipientPublicKey, WrapConfig};
