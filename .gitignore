@@ -12,3 +12,9 @@
 
 # Generated verification artifacts
 RESEARCHER_BUNDLE/reports/
+
+# CT-Wrap artifacts
+ct-wrap/target/
+ct-wrap/node_modules/
+ct-wrap/build/
+ct-wrap/powersOfTau*.ptau

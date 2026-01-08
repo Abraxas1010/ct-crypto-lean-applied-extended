@@ -23,6 +23,10 @@ Part of the broader HeytingLean formal verification project: https://apoth3osis.
 
 This repository presents **the first machine-verified proof** that quantum key distribution protocols like BB84 and E91 are secure against eavesdropping, derived purely from **Constructor Theory** — the Deutsch-Marletto framework that reformulates physics in terms of possible and impossible transformations.
 
+## CT-Wrap (Production App Subproject)
+
+This repo also contains `ct-wrap/`: a private, production-oriented Rust/zk subproject implementing a **quantum-safe data wrapper** (post-quantum KEM + AEAD + optional Groth16 proofs) as specified in `WIP/CT_WRAP_BUILD_INSTRUCTIONS.md`.
+
 ### What Makes This Different
 
 | Traditional Approach | Our Approach |
