@@ -35,3 +35,7 @@ zeroize = "1.7"
 
 [dev-dependencies]
 anyhow = "1.0"
+
+[[bin]]
+name = "keygen"
+path = "src/bin/keygen.rs"

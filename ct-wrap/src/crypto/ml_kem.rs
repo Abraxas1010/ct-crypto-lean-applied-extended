@@ -50,6 +50,13 @@ impl MlKemKeyPair {
         &self.public_key
     }
 
+    /// Serialize secret key for storage/transport (e.g. API input).
+    ///
+    /// WARNING: treat this as sensitive key material.
+    pub fn secret_key_bytes(&self) -> &[u8] {
+        &self.secret_key
+    }
+
     /// Reconstruct a keypair from raw bytes (e.g. API input).
     pub fn from_bytes(public_key: Vec<u8>, secret_key: Vec<u8>) -> Self {
         Self {
