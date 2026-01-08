@@ -15,6 +15,7 @@ Commands:
 - Build/run API: `cargo run`
 - Run unit tests: `cargo test`
 - Setup circuits (Groth16): `./scripts/setup_circuits.sh`
+- Run ZK e2e smoke test (optional): `cargo test -- --ignored zk_e2e`
 
 Notes:
 - PQ primitives are implemented via `pqcrypto-*` crates (Kyber1024/Dilithium5) as ML-KEM/ML-DSA mappings.
