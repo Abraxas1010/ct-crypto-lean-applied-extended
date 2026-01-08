@@ -48,4 +48,3 @@ pub fn generate_proof(
     let parsed: ZkProofResult = serde_json::from_str(&stdout)?;
     Ok(parsed)
 }
-

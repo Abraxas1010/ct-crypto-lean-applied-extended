@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use ct_wrap::crypto::{
-    decrypt_aes_gcm_siv, encrypt_aes_gcm_siv, encapsulate, verify_signature, MlDsaKeyPair,
+    decrypt_aes_gcm_siv, encapsulate, encrypt_aes_gcm_siv, verify_signature, MlDsaKeyPair,
     MlKemKeyPair,
 };
 use ct_wrap::wrap::{unwrap as unwrap_pkg, wrap as wrap_pkg, RecipientPublicKey, WrapConfig};
@@ -21,7 +21,8 @@ fn test_aes_gcm_siv_roundtrip() {
     let aad = b"metadata";
 
     let encrypted = encrypt_aes_gcm_siv(&key, plaintext, aad).unwrap();
-    let decrypted = decrypt_aes_gcm_siv(&key, &encrypted.nonce, &encrypted.ciphertext, aad).unwrap();
+    let decrypted =
+        decrypt_aes_gcm_siv(&key, &encrypted.nonce, &encrypted.ciphertext, aad).unwrap();
     assert_eq!(plaintext.to_vec(), decrypted);
 }
 

@@ -1,11 +1,14 @@
 use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use rand::RngCore;
 use sha3::{Digest, Sha3_256};
 
 use crate::crypto::{
-    decrypt_aes_gcm_siv, derive_key, encrypt_aes_gcm_siv, encapsulate, EncryptionResult, MlDsaKeyPair, MlKemKeyPair,
+    decrypt_aes_gcm_siv, derive_key, encapsulate, encrypt_aes_gcm_siv, EncryptionResult,
+    MlDsaKeyPair, MlKemKeyPair,
 };
 use crate::package::*;
 use crate::zk::generate_proof;
@@ -75,19 +78,42 @@ pub fn wrap(data: &[u8], config: WrapConfig) -> Result<CTWrapPackage, Box<dyn st
     // 5. ZK proof (optional).
     let zk_proof = if config.generate_zk_proof {
         let circuit = config.zk_circuit.as_deref().unwrap_or("data_commitment");
-        let proof_result = generate_proof(data, circuit, std::path::Path::new("build/circuits"))?;
+        let build_dir = Path::new("build/circuits");
+        let proof_result = generate_proof(data, circuit, build_dir)?;
+
+        let vk_path = build_dir.join(format!("{circuit}_verification_key.json"));
+        let vk_bytes = fs::read(&vk_path).map_err(|_| {
+            format!(
+                "missing verification key for circuit '{circuit}' at {} (run scripts/setup_circuits.sh)",
+                vk_path.display()
+            )
+        })?;
+        let verification_key_hash: [u8; 32] = Sha3_256::digest(&vk_bytes).into();
+
         Some(ZkProof {
             circuit_id: circuit.to_string(),
             proof: Groth16ProofData {
-                pi_a: vec![proof_result.proof.pi_a[0].clone(), proof_result.proof.pi_a[1].clone()],
-                pi_b: vec![
-                    vec![proof_result.proof.pi_b[0][0].clone(), proof_result.proof.pi_b[0][1].clone()],
-                    vec![proof_result.proof.pi_b[1][0].clone(), proof_result.proof.pi_b[1][1].clone()],
+                pi_a: vec![
+                    proof_result.proof.pi_a[0].clone(),
+                    proof_result.proof.pi_a[1].clone(),
                 ],
-                pi_c: vec![proof_result.proof.pi_c[0].clone(), proof_result.proof.pi_c[1].clone()],
+                pi_b: vec![
+                    vec![
+                        proof_result.proof.pi_b[0][0].clone(),
+                        proof_result.proof.pi_b[0][1].clone(),
+                    ],
+                    vec![
+                        proof_result.proof.pi_b[1][0].clone(),
+                        proof_result.proof.pi_b[1][1].clone(),
+                    ],
+                ],
+                pi_c: vec![
+                    proof_result.proof.pi_c[0].clone(),
+                    proof_result.proof.pi_c[1].clone(),
+                ],
             },
             public_signals: proof_result.public_signals,
-            verification_key_hash: [0u8; 32],
+            verification_key_hash,
         })
     } else {
         None
@@ -114,7 +140,10 @@ pub fn wrap(data: &[u8], config: WrapConfig) -> Result<CTWrapPackage, Box<dyn st
     })
 }
 
-pub fn unwrap(package: &CTWrapPackage, recipient_keypair: &MlKemKeyPair) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+pub fn unwrap(
+    package: &CTWrapPackage,
+    recipient_keypair: &MlKemKeyPair,
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let recipient_id: [u8; 32] = Sha3_256::digest(&recipient_keypair.public_key).into();
     let our_encap = package
         .key_encapsulations

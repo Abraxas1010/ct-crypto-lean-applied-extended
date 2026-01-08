@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use axum::{
+    extract::Path,
     extract::{Json, State},
     http::StatusCode,
     response::IntoResponse,
@@ -11,10 +12,11 @@ use axum::{
 };
 use base64::Engine;
 use serde::{Deserialize, Serialize};
+use sha3::{Digest, Sha3_256};
 use tower_governor::governor::GovernorConfigBuilder;
 use tower_governor::GovernorLayer;
 
-use crate::crypto::{MlKemKeyPair};
+use crate::crypto::MlKemKeyPair;
 use crate::package::CTWrapPackage;
 use crate::wrap::{unwrap as unwrap_pkg, wrap as wrap_data, RecipientPublicKey, WrapConfig};
 
@@ -43,13 +45,16 @@ pub fn router(state: ApiState) -> Router {
         .route("/health", get(|| async { "ok" }))
         .route("/api/v1/wrap", post(wrap_handler))
         .route("/api/v1/unwrap", post(unwrap_handler))
+        .route("/api/v1/zk/vk/:circuit", get(zk_vk_handler))
         .with_state(Arc::new(state))
-        .layer(GovernorLayer { config: governor_conf })
+        .layer(GovernorLayer {
+            config: governor_conf,
+        })
 }
 
 #[derive(Debug, Deserialize)]
 pub struct WrapRequest {
-    pub data: String, // base64
+    pub data: String,            // base64
     pub recipients: Vec<String>, // base64 ML-KEM pks
     pub content_type: Option<String>,
     pub generate_proof: Option<bool>,
@@ -58,7 +63,7 @@ pub struct WrapRequest {
 
 #[derive(Debug, Serialize)]
 pub struct WrapResponse {
-    pub package: String, // base64 CBOR
+    pub package: String,      // base64 CBOR
     pub package_hash: String, // hex
 }
 
@@ -76,9 +81,14 @@ async fn wrap_handler(
     for pk_b64 in &req.recipients {
         let pk = match b64.decode(pk_b64.as_bytes()) {
             Ok(d) => d,
-            Err(_) => return (StatusCode::BAD_REQUEST, "invalid base64 public key").into_response(),
+            Err(_) => {
+                return (StatusCode::BAD_REQUEST, "invalid base64 public key").into_response()
+            }
         };
-        recipients.push(RecipientPublicKey { ml_kem_pk: pk, x25519_pk: None });
+        recipients.push(RecipientPublicKey {
+            ml_kem_pk: pk,
+            x25519_pk: None,
+        });
     }
 
     let config = WrapConfig {
@@ -98,7 +108,9 @@ async fn wrap_handler(
 
     let pkg_cbor = match pkg.to_cbor() {
         Ok(b) => b,
-        Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR, "serialization failed").into_response(),
+        Err(_) => {
+            return (StatusCode::INTERNAL_SERVER_ERROR, "serialization failed").into_response()
+        }
     };
 
     let resp = WrapResponse {
@@ -112,7 +124,7 @@ async fn wrap_handler(
 
 #[derive(Debug, Deserialize)]
 pub struct UnwrapRequest {
-    pub package: String, // base64 CBOR
+    pub package: String,              // base64 CBOR
     pub recipient_public_key: String, // base64
     pub recipient_secret_key: String, // base64
 }
@@ -153,5 +165,44 @@ async fn unwrap_handler(Json(req): Json<UnwrapRequest>) -> impl IntoResponse {
         data: b64.encode(plaintext),
         content_type: pkg.metadata.content_type,
     };
+    (StatusCode::OK, Json(resp)).into_response()
+}
+
+#[derive(Debug, Serialize)]
+pub struct VkResponse {
+    pub circuit: String,
+    pub verification_key_hash: String, // hex
+    pub verification_key: serde_json::Value,
+}
+
+async fn zk_vk_handler(
+    Path(circuit): Path<String>,
+    State(state): State<Arc<ApiState>>,
+) -> impl IntoResponse {
+    let vk_path = state
+        .circuit_dir
+        .join(format!("{circuit}_verification_key.json"));
+    let vk_bytes = match std::fs::read(&vk_path) {
+        Ok(b) => b,
+        Err(_) => return (StatusCode::NOT_FOUND, "verification key not found").into_response(),
+    };
+    let vk_hash: [u8; 32] = Sha3_256::digest(&vk_bytes).into();
+    let vk_json: serde_json::Value = match serde_json::from_slice(&vk_bytes) {
+        Ok(v) => v,
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "invalid verification key json",
+            )
+                .into_response()
+        }
+    };
+
+    let resp = VkResponse {
+        circuit,
+        verification_key_hash: hex::encode(vk_hash),
+        verification_key: vk_json,
+    };
+
     (StatusCode::OK, Json(resp)).into_response()
 }

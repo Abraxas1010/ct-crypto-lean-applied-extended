@@ -18,6 +18,7 @@ function parseArgs(argv) {
     if (a === "--circuit") out.circuit = argv[++i];
     else if (a === "--build-dir") out.buildDir = argv[++i];
     else if (a === "--data-hex") out.dataHex = argv[++i];
+    else if (a === "--input-json") out.inputJson = argv[++i];
   }
   return out;
 }
@@ -38,9 +39,11 @@ function bytesToFieldElements(bytes, numElements) {
 }
 
 async function main() {
-  const { circuit, buildDir, dataHex } = parseArgs(process.argv);
-  if (!circuit || !buildDir || !dataHex) {
-    console.error("Usage: generate_proof.js --circuit <name> --build-dir <dir> --data-hex <hex>");
+  const { circuit, buildDir, dataHex, inputJson } = parseArgs(process.argv);
+  if (!circuit || !buildDir || (!dataHex && !inputJson)) {
+    console.error(
+      "Usage: generate_proof.js --circuit <name> --build-dir <dir> (--data-hex <hex> | --input-json <path>)"
+    );
     process.exit(2);
   }
 
@@ -48,14 +51,27 @@ async function main() {
   const { buildPoseidon } = require("circomlibjs");
   const poseidon = await buildPoseidon();
 
-  const data = Buffer.from(dataHex, "hex");
-  const elems = bytesToFieldElements(Uint8Array.from(data), 4);
-  const commitment = poseidon.F.toObject(poseidon(elems));
+  let input;
+  let commitment = "";
 
-  const input = {
-    data: elems.map((x) => x.toString()),
-    commitment: commitment.toString(),
-  };
+  if (inputJson) {
+    input = JSON.parse(fs.readFileSync(inputJson, "utf8"));
+    if (typeof input.commitment === "string") commitment = input.commitment;
+  } else {
+    if (circuit !== "data_commitment") {
+      console.error(
+        `Circuit '${circuit}' requires explicit inputs. Use --input-json for non-default circuits.`
+      );
+      process.exit(2);
+    }
+    const data = Buffer.from(dataHex, "hex");
+    const elems = bytesToFieldElements(Uint8Array.from(data), 4);
+    commitment = poseidon.F.toObject(poseidon(elems)).toString();
+    input = {
+      data: elems.map((x) => x.toString()),
+      commitment,
+    };
+  }
 
   const wasmPath = path.join(buildDir, `${circuit}_js`, `${circuit}.wasm`);
   const zkeyPath = path.join(buildDir, `${circuit}_final.zkey`);
@@ -66,7 +82,7 @@ async function main() {
     JSON.stringify({
       proof,
       public_signals: publicSignals,
-      commitment: commitment.toString(),
+      commitment,
     })
   );
 }

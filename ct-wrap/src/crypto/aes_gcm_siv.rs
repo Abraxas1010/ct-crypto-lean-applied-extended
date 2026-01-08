@@ -26,7 +26,13 @@ pub fn encrypt_aes_gcm_siv(
 
     let cipher = Aes256GcmSiv::new_from_slice(key).map_err(|_| CryptoError::InvalidKey)?;
     let ciphertext = cipher
-        .encrypt(nonce, Payload { msg: plaintext, aad })
+        .encrypt(
+            nonce,
+            Payload {
+                msg: plaintext,
+                aad,
+            },
+        )
         .map_err(|_| CryptoError::Encryption)?;
 
     let aad_hash: [u8; 32] = Sha3_256::digest(aad).into();
@@ -47,6 +53,12 @@ pub fn decrypt_aes_gcm_siv(
     let cipher = Aes256GcmSiv::new_from_slice(key).map_err(|_| CryptoError::InvalidKey)?;
     let nonce = Nonce::from_slice(nonce);
     cipher
-        .decrypt(nonce, Payload { msg: ciphertext, aad })
+        .decrypt(
+            nonce,
+            Payload {
+                msg: ciphertext,
+                aad,
+            },
+        )
         .map_err(|_| CryptoError::Decryption)
 }

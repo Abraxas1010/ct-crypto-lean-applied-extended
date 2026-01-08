@@ -52,7 +52,10 @@ impl MlKemKeyPair {
 
     /// Reconstruct a keypair from raw bytes (e.g. API input).
     pub fn from_bytes(public_key: Vec<u8>, secret_key: Vec<u8>) -> Self {
-        Self { public_key, secret_key }
+        Self {
+            public_key,
+            secret_key,
+        }
     }
 }
 

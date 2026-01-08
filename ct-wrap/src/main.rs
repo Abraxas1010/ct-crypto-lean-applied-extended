@@ -11,8 +11,6 @@ async fn main() {
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     eprintln!("ct-wrap listening on http://{addr}");
 
-    let listener = tokio::net::TcpListener::bind(addr)
-        .await
-        .expect("bind");
+    let listener = tokio::net::TcpListener::bind(addr).await.expect("bind");
     axum::serve(listener, app).await.expect("serve");
 }
