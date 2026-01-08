@@ -31,10 +31,13 @@ MODULES = {
     "InformationSound": "task",
     "Core": "task",
     "QubitLike": "task",
+    "QKD": "security",
+    "BB84": "security",
     "Security": "security",
     "Composition": "security",
     "ConstructiveHardnessCore": "umbrella",
     "ConstructiveHardnessSanity": "test",
+    "BB84Sanity": "test",
 }
 
 MODULE_COLORS = {

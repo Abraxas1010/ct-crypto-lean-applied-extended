@@ -39,6 +39,8 @@ lake env lean -c 'import HeytingLean; #check superinfo_secure_against_eavesdropp
 | `HeytingLean/Crypto/ConstructiveHardnessCore.lean` | Umbrella import |
 | `HeytingLean/Crypto/ConstructiveHardness/Security.lean` | Main security theorem |
 | `HeytingLean/Constructor/CT/Examples/QubitLike.lean` | Concrete superinfo witness |
+| `HeytingLean/Crypto/QKD/BB84.lean` | BB84 umbrella import |
+| `HeytingLean/Crypto/QKD/BB84/Security.lean` | BB84 security theorem + intercept-resend |
 
 ## Expected Output
 

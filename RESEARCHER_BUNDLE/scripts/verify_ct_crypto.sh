@@ -8,6 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$BUNDLE_DIR"
+mkdir -p reports
 
 echo "=============================================="
 echo " CT Crypto Verification Script"
@@ -26,7 +27,7 @@ echo "  Lean version: $LEAN_VERSION"
 # 2. Guard: no sorry/admit
 echo ""
 echo "[2/5] Checking for sorry/admit..."
-SORRY_COUNT=$(grep -r --include="*.lean" -E '\bsorry\b|\badmit\b' HeytingLean/ 2>/dev/null | grep -v "-- sorry" | wc -l || true)
+SORRY_COUNT=$(grep -r --include="*.lean" -E '\bsorry\b|\badmit\b' HeytingLean/ 2>/dev/null | grep -v -- "-- sorry" | wc -l || true)
 if [ "$SORRY_COUNT" -gt 0 ]; then
     echo "ERROR: Found $SORRY_COUNT sorry/admit occurrences!"
     grep -r --include="*.lean" -E '\bsorry\b|\badmit\b' HeytingLean/ | head -20
@@ -46,12 +47,20 @@ echo "[4/5] Verifying key theorems..."
 
 verify_theorem() {
     local THEOREM=$1
-    if lake env lean -c "import HeytingLean; #check $THEOREM" 2>/dev/null; then
+    local TMP_FILE
+    TMP_FILE="$(mktemp "${BUNDLE_DIR}/reports/check_XXXXXX.lean")"
+    cat > "$TMP_FILE" <<EOF
+import HeytingLean
+#check $THEOREM
+EOF
+    if lake env lean "$TMP_FILE" >/dev/null 2>&1; then
         echo "  OK: $THEOREM"
-    else
-        echo "  FAIL: $THEOREM not found"
-        return 1
+        rm -f "$TMP_FILE"
+        return 0
     fi
+    echo "  FAIL: $THEOREM not found"
+    echo "  (See ${TMP_FILE} for the failing check.)"
+    return 1
 }
 
 verify_theorem "HeytingLean.Crypto.ConstructiveHardness.PhysicalModality"
@@ -61,16 +70,30 @@ verify_theorem "HeytingLean.Crypto.ConstructiveHardness.superinfo_secure_against
 verify_theorem "HeytingLean.Crypto.ConstructiveHardness.composed_security"
 verify_theorem "HeytingLean.Constructor.CT.Examples.qubitLikeSuperinfo"
 verify_theorem "HeytingLean.LoF.CryptoSheaf.Quantum.triangle_no_global"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.bb84_secure"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.copyAll_impossible"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.intercept_resend_impossible"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.bb84_attackSeqPow_impossible"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.bb84_attackParPow_impossible"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.ErrorRate.full_interception_detected"
+verify_theorem "HeytingLean.Crypto.QKD.BB84.ErrorRate.interception_detectable"
+verify_theorem "HeytingLean.Crypto.QKD.E91.e91_secure"
+verify_theorem "HeytingLean.Crypto.QKD.E91.intercept_impossible"
+verify_theorem "HeytingLean.Physics.Photoemission.efficiency_factorization"
+verify_theorem "HeytingLean.Physics.Photoemission.energy_conservation_required"
 
 # 5. Axiom footprint
 echo ""
 echo "[5/5] Checking axiom footprint..."
-lake env lean -c "
+AXIOM_FILE="$(mktemp "${BUNDLE_DIR}/reports/axioms_XXXXXX.lean")"
+cat > "$AXIOM_FILE" <<'EOF'
 import HeytingLean
 
 #print axioms HeytingLean.Crypto.ConstructiveHardness.superinfo_secure_against_eavesdropping
 #print axioms HeytingLean.Crypto.ConstructiveHardness.composed_security
-" 2>&1 | tee reports/axioms.txt
+#print axioms HeytingLean.Crypto.QKD.BB84.bb84_secure
+EOF
+lake env lean "$AXIOM_FILE" 2>&1 | tee reports/axioms.txt
 
 echo ""
 echo "=============================================="

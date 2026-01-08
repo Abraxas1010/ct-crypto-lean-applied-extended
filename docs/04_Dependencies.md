@@ -21,6 +21,7 @@ require mathlib from git
 | `Mathlib.Data.Set.Basic` | Set operations |
 | `Mathlib.Data.Finset.Basic` | Finite sets |
 | `Mathlib.Data.Fin.Basic` | Fin types |
+| `Mathlib.Data.Fintype.Prod` | `Fintype (α × β)` (BB84 state space) |
 | `Mathlib.Order.CompleteLattice.Basic` | Complete lattices |
 | `Mathlib.Order.Nucleus` | Nucleus (for meta-theory only) |
 | `Mathlib.Data.Multiset.Basic` | Multisets |
