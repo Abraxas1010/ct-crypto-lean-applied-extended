@@ -2,7 +2,7 @@
 
 **Document Purpose:** This document presents the technical and mathematical claims of the CT-Crypto formalization for independent expert review. All theorem statements are extracted verbatim from the Lean 4 source code. Verification instructions are provided.
 
-**Version:** 2 (revised after expert audit)
+**Version:** 3 (audit gap remediation + repo rename)
 **Date:** 2026-01-08
 **Repository:** `WIP/CT_Crypto_Repo/RESEARCHER_BUNDLE/`
 **Verification Command:** `cd RESEARCHER_BUNDLE && ./scripts/verify_ct_crypto.sh`
@@ -29,11 +29,18 @@ We claim to have produced:
 
 4. **Bell inequality foundations** relevant to device-independent QKD:
    - CHSH violation implies no local hidden variable model
-   - *Note: Full DI-QKD security (entropy accumulation, finite-key bounds) is future work.*
+   - A minimal, explicit **Entropy Accumulation (EAT) interface** for DI-QKD as a named assumption
+   - *Note: Concrete DI-QKD entropy bounds and finite-key security are future work.*
 
-5. **Zero `sorry` or `admit`** statements in the entire codebase.
+5. **Audit gap remediation (interface-first, no global axioms):**
+   - A non-tautological **BB84 information→cloning** bridge interface (`BB84InfoDisturbance`), enabling
+     security statements quantified over information-gaining attacks (conditional on an instance).
+   - A small CT-algebra completeness upgrade: **identity task** and **unit laws** at the syntactic layer,
+     plus an extended `TaskCTFull` interface carrying an identity constructor.
 
-6. **Minimal axiom footprint**: propext, Classical.choice, Quot.sound (Lean kernel-standard), with the composition theorem requiring no axioms at all.
+6. **Zero `sorry` or `admit`** statements in the entire codebase.
+
+7. **Minimal axiom footprint**: propext, Classical.choice, Quot.sound (Lean kernel-standard), with the composition theorem requiring no axioms at all.
 
 ---
 
@@ -95,6 +102,9 @@ import HeytingLean
 'chsh_inequality' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
+**Reference-only note (version 3):** the verification script also writes `reports/axioms.txt` containing
+`#print axioms` results for a curated set of theorems, including BB84/E91 security statements.
+
 ---
 
 ## 3. Core Mathematical Framework
@@ -136,10 +146,13 @@ def impossible (T : Task σ) : Prop := ¬ CT.possible T
 - `possible T ↔ ∃c. implements(c, T)` (existential semantics)
 
 **What this does NOT provide (future work):**
-- Identity constructors
 - Associativity/commutativity proofs for composition
 - Full substrate algebra (Deutsch-Marletto axioms)
 - Inverses, permutation groups
+
+**Addendum (version 3):** we now provide an *optional* identity-carrying extension interface:
+`TaskCTFull` (in the same file) together with the syntactic identity task `Task.id` and unit simp
+lemmas in `HeytingLean/Constructor/CT/Core.lean`.
 
 ### 3.2 Physical Modality
 
@@ -158,7 +171,7 @@ structure PhysicalModality where
 
 ### 3.3 Superinformation Medium
 
-**Source file:** `HeytingLean/Crypto/ConstructiveHardness/TaskSpec.lean`
+**Source file:** `HeytingLean/Constructor/CT/InformationSound.lean`
 
 The central structure encoding the no-cloning property:
 
@@ -243,6 +256,7 @@ The proof is three lines because the work is encoded in the definitions:
 |----------|-------|--------|
 | BB84 | `intercept_resend_requires_copyAll` | **Tautological**: `eveInterceptTask := copyAll` |
 | E91 | `intercept_requires_copyAll` | **Tautological**: `eveInterceptTask := copyAll` |
+| BB84 | `bb84_secure_against_all_info_attacks` | **Non-tautological interface**: conditional on `BB84InfoDisturbance` |
 
 **What this means:** We have proven security against the *intercept-resend* attack class (where Eve must clone to forward). We have NOT proven security against *all* physically realizable eavesdropping strategies.
 
@@ -250,6 +264,11 @@ The proof is three lines because the work is encoded in the definitions:
 - Prove that any "information-gaining" attack on BB84/E91 necessarily implies a cloning capability
 - Formalize the information-disturbance tradeoff
 - Connect to the DI framework where CHSH violation bounds Eve's information
+
+**Audit remediation (version 3):** the first item above is now represented *explicitly* as an
+interface-first statement in `HeytingLean/Crypto/QKD/BB84/InfoDisturbance.lean` (typeclass
+`BB84InfoDisturbance`). This avoids introducing any new global axioms, while making the missing
+physics/information-theory assumptions visible and localizable.
 
 ### 4.4 Composition Theorem
 
