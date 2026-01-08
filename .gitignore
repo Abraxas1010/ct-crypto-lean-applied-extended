@@ -1,0 +1,14 @@
+# Lean / Lake build artifacts (anywhere)
+**/.lake/
+**/build/
+**/*.olean
+**/*.ilean
+**/*.c
+**/*.o
+**/*.a
+**/*.so
+**/*.dylib
+**/*.exe
+
+# Generated verification artifacts
+RESEARCHER_BUNDLE/reports/
