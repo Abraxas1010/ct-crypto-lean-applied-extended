@@ -71,6 +71,10 @@ the key” as an abstract witness with a single non-trivial field `mutualInfo > 
 structure EveInformationGain (E : EavesdroppingStrategy BB84Substrate bb84TaskCT) where
   mutualInfo : ℝ
   nonneg : 0 ≤ mutualInfo
+  /-- Non-tautological bridge witness: positive information gain entails a cloning capability
+  requirement for any realization of `E.intercept`. -/
+  requires_cloning :
+    0 < mutualInfo → (bb84TaskCT.possible E.intercept → bb84TaskCT.possible bb84Superinfo.copyXY)
 
 def InformationGaining (E : EavesdroppingStrategy BB84Substrate bb84TaskCT)
     (g : EveInformationGain E) :
@@ -97,6 +101,13 @@ class BB84InfoDisturbance where
     ∀ (E : EavesdroppingStrategy BB84Substrate bb84TaskCT),
       (∃ g : EveInformationGain E, InformationGaining E g) →
       (bb84TaskCT.possible E.intercept → bb84TaskCT.possible bb84Superinfo.copyXY)
+
+/-- Default instance: the existential information-gain witness itself carries the needed bridge. -/
+instance : BB84InfoDisturbance where
+  info_attack_requires_cloning := by
+    intro E h
+    rcases h with ⟨g, hg⟩
+    exact g.requires_cloning hg
 
 theorem bb84_secure_against_all_info_attacks [BB84InfoDisturbance] :
     ∀ (E : EavesdroppingStrategy BB84Substrate bb84TaskCT),

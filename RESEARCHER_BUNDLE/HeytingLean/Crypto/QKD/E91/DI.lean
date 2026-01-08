@@ -2,6 +2,7 @@ import HeytingLean.Crypto.QKD.E91.DI.CHSH.CHSHInequality
 import HeytingLean.Crypto.QKD.E91.DI.Tsirelson.Achievability
 import HeytingLean.Crypto.QKD.E91.DI.Security.CHSHSecurity
 import HeytingLean.Crypto.QKD.E91.DI.EntropyAccumulation
+import HeytingLean.Crypto.QKD.E91.DI.EntropyAccumulationToy
 
 /-!
 # E91 Device-Independent Layer (CHSH/Tsirelson umbrella)
