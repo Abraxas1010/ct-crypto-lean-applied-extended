@@ -1,6 +1,7 @@
 import HeytingLean.Crypto.QKD.E91.DI.CHSH.CHSHInequality
 import HeytingLean.Crypto.QKD.E91.DI.Tsirelson.Achievability
 import HeytingLean.Crypto.QKD.E91.DI.Security.CHSHSecurity
+import HeytingLean.Crypto.QKD.E91.DI.EntropyAccumulation
 
 /-!
 # E91 Device-Independent Layer (CHSH/Tsirelson umbrella)
@@ -18,4 +19,3 @@ namespace HeytingLean.Crypto.QKD.E91.DI
 -- Intentionally empty: importing the modules is the API.
 
 end HeytingLean.Crypto.QKD.E91.DI
-
