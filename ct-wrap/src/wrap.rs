@@ -8,7 +8,7 @@ use rand::RngCore;
 use sha3::{Digest, Sha3_256};
 
 use crate::crypto::{
-    decrypt_aes_gcm_siv, derive_key, encapsulate, encrypt_aes_gcm_siv, EncryptionResult,
+    decrypt_aes_gcm_siv, derive_key, encapsulate, encrypt_aes_gcm_siv, verify_signature,
     MlDsaKeyPair, MlKemKeyPair,
 };
 use crate::package::*;
@@ -65,7 +65,8 @@ pub fn wrap(data: &[u8], config: WrapConfig) -> Result<CTWrapPackage, Box<dyn st
 
     // 4. Sign (optional).
     let signature = if let Some(signer) = &config.signer {
-        let sign_data = prepare_sign_data(&encrypted, &content_hash);
+        let sign_data =
+            prepare_sign_data_fields(&encrypted.nonce, &encrypted.aad_hash, &content_hash);
         let sig = signer.sign(&sign_data)?;
         Some(Signature {
             algorithm: "ML-DSA-87".to_string(),
@@ -195,6 +196,24 @@ pub fn unwrap_with_config(
         return Err("AAD hash mismatch".into());
     }
 
+    if let Some(sig) = &package.signature {
+        let sign_data = prepare_sign_data_fields(
+            &package.encrypted_data.nonce,
+            &package.encrypted_data.aad_hash,
+            &package.metadata.content_hash,
+        );
+
+        let expected_signed_data_hash: [u8; 32] = Sha3_256::digest(&sign_data).into();
+        if expected_signed_data_hash != sig.signed_data_hash {
+            return Err("signed_data_hash mismatch".into());
+        }
+
+        let valid = verify_signature(&sig.public_key, &sign_data, &sig.signature)?;
+        if !valid {
+            return Err("signature verification failed".into());
+        }
+    }
+
     let plaintext = decrypt_aes_gcm_siv(
         &cek,
         &package.encrypted_data.nonce,
@@ -240,11 +259,15 @@ fn prepare_aad(content_hash: &[u8; 32], timestamp: u64, config: &WrapConfig) -> 
     aad
 }
 
-fn prepare_sign_data(encrypted: &EncryptionResult, content_hash: &[u8; 32]) -> Vec<u8> {
+fn prepare_sign_data_fields(
+    nonce: &[u8; 12],
+    aad_hash: &[u8; 32],
+    content_hash: &[u8; 32],
+) -> Vec<u8> {
     let mut data = Vec::new();
     data.extend_from_slice(b"CT-WRAP-SIGN-v1");
-    data.extend_from_slice(&encrypted.nonce);
-    data.extend_from_slice(&encrypted.aad_hash);
+    data.extend_from_slice(nonce);
+    data.extend_from_slice(aad_hash);
     data.extend_from_slice(content_hash);
     data
 }

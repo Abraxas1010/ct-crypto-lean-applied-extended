@@ -58,3 +58,59 @@ fn test_wrap_unwrap_roundtrip() {
     let recovered = unwrap_pkg(&package, &recipient).unwrap();
     assert_eq!(data.to_vec(), recovered);
 }
+
+#[test]
+fn test_wrap_unwrap_signed() {
+    let recipient = MlKemKeyPair::generate().unwrap();
+    let signer = MlDsaKeyPair::generate().unwrap();
+    let data = b"Signed message";
+
+    let config = WrapConfig {
+        recipients: vec![RecipientPublicKey {
+            ml_kem_pk: recipient.public_key.clone(),
+            x25519_pk: None,
+        }],
+        signer: Some(signer),
+        generate_zk_proof: false,
+        zk_circuit: None,
+        content_type: Some("text/plain".to_string()),
+        access_policy: None,
+        custom_metadata: HashMap::new(),
+    };
+
+    let package = wrap_pkg(data, config).unwrap();
+    assert!(package.signature.is_some());
+
+    let recovered = unwrap_pkg(&package, &recipient).unwrap();
+    assert_eq!(data.to_vec(), recovered);
+}
+
+#[test]
+fn test_tampered_signature_rejected() {
+    let recipient = MlKemKeyPair::generate().unwrap();
+    let signer = MlDsaKeyPair::generate().unwrap();
+    let data = b"Signed message";
+
+    let config = WrapConfig {
+        recipients: vec![RecipientPublicKey {
+            ml_kem_pk: recipient.public_key.clone(),
+            x25519_pk: None,
+        }],
+        signer: Some(signer),
+        generate_zk_proof: false,
+        zk_circuit: None,
+        content_type: Some("text/plain".to_string()),
+        access_policy: None,
+        custom_metadata: HashMap::new(),
+    };
+
+    let mut package = wrap_pkg(data, config).unwrap();
+    let sig = package.signature.as_mut().unwrap();
+    sig.signature[0] ^= 0x01;
+
+    let err = unwrap_pkg(&package, &recipient).unwrap_err();
+    assert!(
+        err.to_string().contains("signature verification failed"),
+        "expected signature verification error, got: {err}"
+    );
+}
