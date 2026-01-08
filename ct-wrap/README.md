@@ -1,8 +1,8 @@
-# CT-Wrap (Private)
+# CT-Wrap
 
 Quantum-safe data wrapper: post-quantum key encapsulation + AEAD encryption + optional ZK proofs.
 
-This folder is a standalone product sub-project inside `ct-crypto-lean-private`.
+This folder is a standalone product sub-project inside `ct-crypto-lean-applied-extended`.
 
 See `ARCHITECTURE.md` for the wrap/unwrap flow and security properties.
 

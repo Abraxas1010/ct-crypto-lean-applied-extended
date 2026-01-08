@@ -25,7 +25,7 @@ This repository presents **the first machine-verified proof** that quantum key d
 
 ## CT-Wrap (Production App Subproject)
 
-This repo also contains `ct-wrap/`: a private, production-oriented Rust/zk subproject implementing a **quantum-safe data wrapper** (post-quantum KEM + AEAD + optional Groth16 proofs) as specified in `WIP/CT_WRAP_BUILD_INSTRUCTIONS.md`.
+This repo also contains `ct-wrap/`: a production-oriented Rust/zk subproject implementing a **quantum-safe data wrapper** (post-quantum KEM + AEAD + optional Groth16 proofs) as specified in `WIP/CT_WRAP_BUILD_INSTRUCTIONS.md`.
 
 ### What Makes This Different
 
