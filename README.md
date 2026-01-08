@@ -189,6 +189,12 @@ cd RESEARCHER_BUNDLE
 ./scripts/verify_ct_crypto.sh
 ```
 
+### Full Suite (Lean + CT-Wrap)
+
+```bash
+./scripts/test_all.sh
+```
+
 **Output:**
 ```
 [2/5] Checking for sorry/admit...

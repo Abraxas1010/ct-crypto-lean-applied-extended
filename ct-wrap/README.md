@@ -4,6 +4,8 @@ Quantum-safe data wrapper: post-quantum key encapsulation + AEAD encryption + op
 
 This folder is a standalone product sub-project inside `ct-crypto-lean-private`.
 
+See `ARCHITECTURE.md` for the wrap/unwrap flow and security properties.
+
 ## Quick start (dev)
 
 Prereqs:
@@ -17,6 +19,15 @@ Commands:
 - Setup circuits (Groth16): `./scripts/setup_circuits.sh`
 - Run ZK e2e smoke test (optional): `cargo test -- --ignored zk_e2e`
 - Run API integration test (service must be running): `./scripts/integration_test.sh`
+
+## API
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/health` | GET | Health check |
+| `/api/v1/wrap` | POST | Wrap bytes into a `CTWrapPackage` |
+| `/api/v1/unwrap` | POST | Unwrap with recipient keypair |
+| `/api/v1/zk/vk/:circuit` | GET | Fetch verification key + VK hash |
 
 Notes:
 - PQ primitives are implemented via `pqcrypto-*` crates (Kyber1024/Dilithium5) as ML-KEM/ML-DSA mappings.
